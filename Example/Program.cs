@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SimultaneousConsoleIO
+namespace Example
 {
     internal class Program
     {
