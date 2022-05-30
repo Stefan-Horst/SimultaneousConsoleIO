@@ -258,11 +258,7 @@ namespace SimultaneousConsoleIO
             if ((cursorXOffset + cmdInput.Length) % Console.BufferWidth > 0) // move cursor y one more down if there is one last not full line of input
                 Console.CursorTop++;
 
-            string input = cmdInput.ToString();
-
-            Console.WriteLine(input); //del later
-
-            return input;
+            return cmdInput.ToString();
         }
 
         // writes all output cached in the outputwriter to the console, returns true if any text was printed, otherwise returns false
@@ -292,17 +288,8 @@ namespace SimultaneousConsoleIO
 
                 Console.Write(prompt + inputCache);
 
-                // make cursor break line when input reaches end of line
-                /*if (prompt.Length + inputCache.Length > 0 && (prompt.Length + inputCache.Length) % Console.BufferWidth == 0)
-                {
-                    Console.CursorTop++;
-                    Console.CursorLeft = 0;
-                }*/
-                //else //does prompt cause problems with window resizing? if yes change to cursorxtotal + prompt.length above
-                {
-                    Console.CursorTop = tempPosY + (cursorXTotal + cursorXOffset) / Console.BufferWidth; // '/' discards remainder
-                    Console.CursorLeft = tempPosX + (cursorXTotal + cursorXOffset) % Console.BufferWidth;
-                }
+                Console.CursorTop = tempPosY + (cursorXTotal + cursorXOffset) / Console.BufferWidth; // '/' discards remainder
+                Console.CursorLeft = tempPosX + (cursorXTotal + cursorXOffset) % Console.BufferWidth;
             }
         }
 
