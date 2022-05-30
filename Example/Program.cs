@@ -1,12 +1,22 @@
 ﻿using System;
+using SimultaneousConsoleIO;
 
 namespace Example
 {
-    internal class Program
+    class Program
     {
-        static void Main(string[] args)
+        static void Main()
         {
-            Console.WriteLine("Hello World!");
+            OutputWriter outputWriter = new OutputWriter();
+            TextProvider textProvider = new TextProvider();
+            SimulConsoleIO simulIO = new SimulConsoleIO(outputWriter, textProvider);
+
+            while (true)
+            {
+                string input = simulIO.ReadLine("> Your input: ");
+
+                outputWriter.AddText("You just typed: " + input);
+            }
         }
     }
 }
