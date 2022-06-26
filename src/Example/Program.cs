@@ -1,5 +1,4 @@
-﻿using System;
-using SimultaneousConsoleIO;
+﻿using SimultaneousConsoleIO;
 
 namespace Example
 {
@@ -15,7 +14,7 @@ namespace Example
             {
                 string input = simulIO.ReadLine("> Your input: ");
 
-                outputWriter.AddText("You just typed: " + input);
+                simulIO.WriteLine("You just typed: " + input);
             }
         }
     }

@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.1.32421.90
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimultaneousConsoleIO", "SimultaneousConsoleIO\SimultaneousConsoleIO.csproj", "{278CCBA2-E1F8-4741-8F95-FB9AACF225CD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimultaneousConsoleIO", "src\SimultaneousConsoleIO\SimultaneousConsoleIO.csproj", "{278CCBA2-E1F8-4741-8F95-FB9AACF225CD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Example", "Example\Example.csproj", "{26071B18-9204-4067-80F6-CACB25673D96}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Example", "src\Example\Example.csproj", "{26071B18-9204-4067-80F6-CACB25673D96}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
