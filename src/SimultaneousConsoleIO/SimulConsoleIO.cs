@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading;
@@ -15,7 +14,10 @@ namespace SimultaneousConsoleIO
         private int sleepTime = 25; // pause as short as possible without eating cpu
         private List<string> history = new List<string>();
 
+        public IOutputWriter OutputWriter { get => outputWriter; set => outputWriter = value; }
+        public ITextProvider TextProvider { get => textProvider; set => textProvider = value; }
         public string PromptDefault { get => promptDefault; set => promptDefault = value; }
+        public int SleepTime { get => sleepTime; set => sleepTime = value; }
 
         public SimulConsoleIO(IOutputWriter outputWriter, ITextProvider textProvider, string promptDefault)
         {
@@ -315,7 +317,8 @@ namespace SimultaneousConsoleIO
                         }
                     }
                 }
-                textProvider.CheckForText();
+                if (textProvider != null)
+                    textProvider.CheckForText();
                 PrintText(cmdInput.ToString(), cursorYInit, prompt, cursorXOffset, cursorXTotal); // write text to console "while" getting user input
 
                 cursorYInit = Console.CursorTop - (cursorXOffset + cursorXTotal) / Console.BufferWidth; // changes value relative to changes to cursortop caused by cmd window resizing
