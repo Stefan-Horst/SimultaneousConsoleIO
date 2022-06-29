@@ -40,6 +40,16 @@ namespace SimultaneousConsoleIO
             : this(outputWriter, null, "")
         { }
 
+        public void Write(string text)
+        {
+            outputWriter.AddText(text);
+        }
+
+        public void WriteLine(string text)
+        {
+            Write(text + Environment.NewLine);
+        }
+
         public string ReadLine()
         {
             return ReadLine(promptDefault);
@@ -389,11 +399,6 @@ namespace SimultaneousConsoleIO
                 Console.CursorTop = tempPosY + (cursorXTotal + cursorXOffset) / Console.BufferWidth; // '/' discards remainder
                 Console.CursorLeft = tempPosX + (cursorXTotal + cursorXOffset) % Console.BufferWidth;
             }
-        }
-
-        public void WriteLine(string text)
-        {
-            outputWriter.AddText(text);
         }
     }
 }
