@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using SimultaneousConsoleIO;
 
 namespace Example
@@ -20,11 +19,8 @@ namespace Example
             
             if (OutputTextQueue.Count > 0)
             {
-                // format text so that every item from the output queue will be printed in a new line (thus emulating the writeline method)
-                while (OutputTextQueue.Count > 1)
-                    s += OutputTextQueue.Dequeue() + Environment.NewLine;
-
-                s += OutputTextQueue.Dequeue();
+                while (OutputTextQueue.Count > 0)
+                    s += OutputTextQueue.Dequeue();
             }
 
             return s;

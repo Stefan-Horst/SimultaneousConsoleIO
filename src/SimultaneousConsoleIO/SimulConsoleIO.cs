@@ -13,6 +13,7 @@ namespace SimultaneousConsoleIO
         // pause time in main loop (waiting for key input or text output)
         private int sleepTime = 25; // pause as short as possible without eating cpu
         private List<string> history = new List<string>();
+        private bool readlineActive = false;
 
         public IOutputWriter OutputWriter { get => outputWriter; set => outputWriter = value; }
         public ITextProvider TextProvider { get => textProvider; set => textProvider = value; }
@@ -42,7 +43,10 @@ namespace SimultaneousConsoleIO
 
         public void Write(string text)
         {
-            outputWriter.AddText(text);
+            if (readlineActive)
+                outputWriter.AddText(text);
+            else
+                Console.Write(text);
         }
 
         public void WriteLine(string text)
@@ -57,6 +61,8 @@ namespace SimultaneousConsoleIO
 
         public string ReadLine(string prompt)
         {
+            readlineActive = true;
+
             StringBuilder cmdInput = new StringBuilder();
 
             int cursorYInit = Console.CursorTop;
@@ -347,6 +353,10 @@ namespace SimultaneousConsoleIO
 
             history.Add(cmdInput.ToString());
 
+            Console.Write(OutputWriter.GetText()); // try to make sure no text is stuck in outputwriter after readline method ends
+
+            readlineActive = false;
+
             return cmdInput.ToString();
         }
 
@@ -389,7 +399,10 @@ namespace SimultaneousConsoleIO
                 }
                 Console.CursorTop = cursorYInit;
 
-                Console.WriteLine(output);
+                Console.Write(output);
+
+                if (Console.CursorLeft > 0) // make sure readline method resumes at beginning of (new) line
+                    Console.WriteLine();
                 
                 tempPosY = Console.CursorTop;
                 int tempPosX = Console.CursorLeft;
