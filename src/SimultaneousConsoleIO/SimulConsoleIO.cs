@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading;
@@ -13,10 +13,9 @@ namespace SimultaneousConsoleIO
         // pause time in main loop (waiting for key input or text output)
         private int sleepTime = 25; // pause as short as possible without eating cpu
         private List<string> history = new List<string>();
-        private bool readlineActive = false;
 
         public IOutputWriter OutputWriter { get => outputWriter; set => outputWriter = value; }
-        public ITextProvider TextProvider { get => textProvider; set => textProvider = value; }
+        public ITextProvider TextProvider { get => textProvider; set { textProvider = value; AddOutputWriterToTextProvider(); } } // get can return null
         public string PromptDefault { get => promptDefault; set => promptDefault = value; }
         public int SleepTime { get => sleepTime; set => sleepTime = value; }
 
@@ -26,10 +25,10 @@ namespace SimultaneousConsoleIO
             this.textProvider = textProvider;
             this.promptDefault = promptDefault;
 
-            textProvider.SetOutputWriter(outputWriter);
+            AddOutputWriterToTextProvider();
         }
 
-        public SimulConsoleIO(IOutputWriter outputWriter, ITextProvider textProvider) 
+        public SimulConsoleIO(IOutputWriter outputWriter, ITextProvider textProvider)
             : this(outputWriter, textProvider, "")
         { }
 
@@ -43,10 +42,7 @@ namespace SimultaneousConsoleIO
 
         public void Write(string text)
         {
-            if (readlineActive)
-                outputWriter.AddText(text);
-            else
-                Console.Write(text);
+            outputWriter.AddText(text);
         }
 
         public void WriteLine(string text)
@@ -61,15 +57,13 @@ namespace SimultaneousConsoleIO
 
         public string ReadLine(string prompt)
         {
-            readlineActive = true;
-
             StringBuilder cmdInput = new StringBuilder();
 
             int cursorYInit = Console.CursorTop;
             int cursorXTotal = 0; // like cursorleft but does not reset at new lines
             int cursorXOffset = prompt.Length; // length of prompt before input
             int index = -1; // index of history list
-            
+
             Console.Write(prompt);
 
             ConsoleKeyInfo cki = default;
@@ -77,11 +71,11 @@ namespace SimultaneousConsoleIO
             do // while (cki.Key != ConsoleKey.Enter)
             {
                 if (Console.KeyAvailable)
-                { 
+                {
                     cki = Console.ReadKey(true);
 
                     // ctrl key not pressed or alt key pressed (making ctrl+alt possible which equals altgr key), prevents shortcuts like ctrl+i, but allows ones like altgr+q for @
-                    if (cki.Key != ConsoleKey.Enter && ((cki.Modifiers & ConsoleModifiers.Control) == 0 || (cki.Modifiers & ConsoleModifiers.Alt) != 0)) 
+                    if (cki.Key != ConsoleKey.Enter && ((cki.Modifiers & ConsoleModifiers.Control) == 0 || (cki.Modifiers & ConsoleModifiers.Alt) != 0))
                     {
                         Console.Write(cki.KeyChar);
 
@@ -108,11 +102,11 @@ namespace SimultaneousConsoleIO
                                     Console.Write(" \b");
                                 }
                                 else // makes it possible to backspace to start of line (cursor x = 0)
-                                { 
+                                {
                                     Console.CursorLeft--;
                                 }
 
-                                if (cursorXTotal > 0) 
+                                if (cursorXTotal > 0)
                                 {
                                     cmdInput.Remove(cursorXTotal - 1, 1);
                                     cursorXTotal--;
@@ -177,7 +171,7 @@ namespace SimultaneousConsoleIO
                                     index--;
 
                                 Console.Write(history[index]);
-                          
+
                                 cmdInput.Clear();
                                 cmdInput.Append(history[index]);
 
@@ -229,7 +223,7 @@ namespace SimultaneousConsoleIO
                         {
                             if (history.Count > 0)
                             {
-                                ClearInput(cursorYInit, cursorXOffset,cmdInput.Length);
+                                ClearInput(cursorYInit, cursorXOffset, cmdInput.Length);
 
                                 index = history.Count - 1;
 
@@ -353,10 +347,6 @@ namespace SimultaneousConsoleIO
 
             history.Add(cmdInput.ToString());
 
-            Console.Write(OutputWriter.GetText()); // try to make sure no text is stuck in outputwriter after readline method ends
-
-            readlineActive = false;
-
             return cmdInput.ToString();
         }
 
@@ -383,7 +373,7 @@ namespace SimultaneousConsoleIO
         private void PrintText(string inputCache, int cursorYInit, string prompt, int cursorXOffset, int cursorXTotal)
         {
             string output = outputWriter.GetText();
-            
+
             if (output.Length > 0)
             {
                 // set to cursor y pos last line of input
@@ -399,11 +389,8 @@ namespace SimultaneousConsoleIO
                 }
                 Console.CursorTop = cursorYInit;
 
-                Console.Write(output);
+                Console.WriteLine(output);
 
-                if (Console.CursorLeft > 0) // make sure readline method resumes at beginning of (new) line
-                    Console.WriteLine();
-                
                 tempPosY = Console.CursorTop;
                 int tempPosX = Console.CursorLeft;
 
@@ -412,6 +399,12 @@ namespace SimultaneousConsoleIO
                 Console.CursorTop = tempPosY + (cursorXTotal + cursorXOffset) / Console.BufferWidth; // '/' discards remainder
                 Console.CursorLeft = tempPosX + (cursorXTotal + cursorXOffset) % Console.BufferWidth;
             }
+        }
+
+        private void AddOutputWriterToTextProvider()
+        {
+            if (textProvider != null)
+                textProvider.SetOutputWriter(outputWriter);
         }
     }
 }
