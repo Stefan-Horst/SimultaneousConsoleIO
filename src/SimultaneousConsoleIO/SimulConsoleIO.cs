@@ -15,30 +15,18 @@ namespace SimultaneousConsoleIO
         private List<string> history = new List<string>();
 
         public IOutputWriter OutputWriter { get => outputWriter; set => outputWriter = value; }
-        public ITextProvider TextProvider { get => textProvider; set { textProvider = value; AddOutputWriterToTextProvider(); } } // get can return null
+        public ITextProvider TextProvider { get => textProvider; set { textProvider = value; textProvider?.SetOutputWriter(outputWriter); } } // get can return null
         public string PromptDefault { get => promptDefault; set => promptDefault = value; }
         public int SleepTime { get => sleepTime; set => sleepTime = value; }
 
-        public SimulConsoleIO(IOutputWriter outputWriter, ITextProvider textProvider, string promptDefault)
+        public SimulConsoleIO(IOutputWriter outputWriter, ITextProvider textProvider = null, string promptDefault = "")
         {
             this.outputWriter = outputWriter;
             this.textProvider = textProvider;
             this.promptDefault = promptDefault;
 
-            AddOutputWriterToTextProvider();
+            textProvider?.SetOutputWriter(outputWriter);
         }
-
-        public SimulConsoleIO(IOutputWriter outputWriter, ITextProvider textProvider)
-            : this(outputWriter, textProvider, "")
-        { }
-
-        public SimulConsoleIO(IOutputWriter outputWriter, string promptDefault)
-            : this(outputWriter, null, promptDefault)
-        { }
-
-        public SimulConsoleIO(IOutputWriter outputWriter)
-            : this(outputWriter, null, "")
-        { }
 
         public void Write(string text)
         {
@@ -55,7 +43,7 @@ namespace SimultaneousConsoleIO
             return ReadLine(promptDefault);
         }
 
-        public string ReadLine(string prompt)
+        public string ReadLine(string prompt, string inputText = "")
         {
             StringBuilder cmdInput = new StringBuilder();
 
@@ -65,6 +53,14 @@ namespace SimultaneousConsoleIO
             int index = -1; // index of history list
 
             Console.Write(prompt);
+
+            if (inputText != "")
+            {
+                Console.Write(inputText);
+                cmdInput.Append(inputText);
+                cursorXTotal = cmdInput.Length;
+                SetCursorEndOfInput(cursorYInit, cursorXOffset, cursorXTotal);
+            }
 
             ConsoleKeyInfo cki = default;
 
@@ -327,8 +323,8 @@ namespace SimultaneousConsoleIO
                         }
                     }
                 }
-                if (textProvider != null)
-                    textProvider.CheckForText();
+                textProvider?.CheckForText();
+                
                 PrintText(cmdInput.ToString(), cursorYInit, prompt, cursorXOffset, cursorXTotal); // write text to console "while" getting user input
 
                 cursorYInit = Console.CursorTop - (cursorXOffset + cursorXTotal) / Console.BufferWidth; // changes value relative to changes to cursortop caused by cmd window resizing
@@ -399,12 +395,6 @@ namespace SimultaneousConsoleIO
                 Console.CursorTop = tempPosY + (cursorXTotal + cursorXOffset) / Console.BufferWidth; // '/' discards remainder
                 Console.CursorLeft = tempPosX + (cursorXTotal + cursorXOffset) % Console.BufferWidth;
             }
-        }
-
-        private void AddOutputWriterToTextProvider()
-        {
-            if (textProvider != null)
-                textProvider.SetOutputWriter(outputWriter);
         }
     }
 }
