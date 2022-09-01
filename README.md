@@ -5,7 +5,7 @@ Therefore no more annoying blocking by `Console.ReadLine()` preventing text from
 
 ## Features
 
-SimultaneousConsoleIO tries to emulate console functionality from `Console.ReadLine()` as completely as possible.  
+SimultaneousConsoleIO tries to emulate console functionality from `Console.ReadLine()` as completely as possible and has some additional features such as printing text in the input are which the user can then edit.  
 Still, some features are missing as of now. See below for a full list of supported actions.
 
 <details><summary>Keys & Shortcuts</summary>
@@ -73,7 +73,7 @@ The SimulConsoleIO class handles most of the logic and emulates normal console b
 
 The class has the two most important methods:
 - `WriteLine`: used to replace `Console.WriteLine()`, allowing text to be written to the console while the ReadLine method is active.
-- `ReadLine`: used to replace `Console.ReadLine()`, reading user input while still allowing the console to print output with the WriteLine method.
+- `ReadLine`: used to replace `Console.ReadLine()`, reading user input while still allowing the console to print output with the WriteLine method. The inputText parameter can be used to write text in the input are, which the user can then edit or complete.
 
 **Important**: do not use `Console.WriteLine()` or `Console.ReadLine()` while using SimulConsoleIO. Doing so might break the console.
 
