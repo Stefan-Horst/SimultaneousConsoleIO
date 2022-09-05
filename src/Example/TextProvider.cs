@@ -3,13 +3,13 @@ using SimultaneousConsoleIO;
 
 namespace Example
 {
-    class TextProvider : ITextProvider
+    public class TextProvider : ITextProvider
     {
         private IOutputWriter outputWriter;
 
-        public void SetOutputWriter(IOutputWriter outputWriter)
+        public void SetOutputWriter(IOutputWriter newOutputWriter)
         {
-            this.outputWriter = outputWriter;
+            outputWriter = newOutputWriter;
         }
 
         public void CheckForText()
@@ -17,7 +17,7 @@ namespace Example
             // just add some text to be written to the console every now and then and completely independently from the console input
             // in a real application this could be log messages or other strings to be printed that could occur at any time
             if (DateTime.Now.Ticks % 120 == 0)
-                outputWriter.AddText("This message appears every few seconds! The time is " + DateTime.Now.ToLongTimeString());
+                outputWriter.AddText("This message appears every few seconds! The time is " + DateTime.Now.ToLongTimeString() + Environment.NewLine);
         }
     }
 }

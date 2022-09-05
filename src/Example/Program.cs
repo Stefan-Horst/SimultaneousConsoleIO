@@ -2,9 +2,9 @@
 
 namespace Example
 {
-    class Program
+    public class Program
     {
-        static void Main()
+        public static void Main()
         {
             OutputWriter outputWriter = new OutputWriter();
             TextProvider textProvider = new TextProvider();
