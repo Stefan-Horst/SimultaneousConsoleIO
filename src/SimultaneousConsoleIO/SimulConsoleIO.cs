@@ -73,10 +73,10 @@ namespace SimultaneousConsoleIO
                     // ctrl key not pressed or alt key pressed (making ctrl+alt possible which equals altgr key), prevents shortcuts like ctrl+i, but allows ones like altgr+q for @
                     if (cki.Key != ConsoleKey.Enter && ((cki.Modifiers & ConsoleModifiers.Control) == 0 || (cki.Modifiers & ConsoleModifiers.Alt) != 0))
                     {
-                        Console.Write(cki.KeyChar);
-
                         if (cki.Key == ConsoleKey.Backspace)
-                        {
+                        {                            
+                            Console.Write(cki.KeyChar);
+
                             Console.CursorLeft++; // counteracts console standard behaviour of moving cursor one to the left
 
                             // nested if so that backspace does not get added to cmdinput in else-part of statement
@@ -290,6 +290,8 @@ namespace SimultaneousConsoleIO
                         }
                         else // handle normal key input
                         {
+                            Console.Write(cki.KeyChar);
+                            
                             if (cursorXTotal >= cmdInput.Length) // if cursor is at end of input
                             {
                                 cmdInput.Append(cki.KeyChar);
@@ -385,7 +387,7 @@ namespace SimultaneousConsoleIO
                 }
                 Console.CursorTop = cursorYInit;
 
-                Console.WriteLine(output);
+                Console.Write(output);
 
                 tempPosY = Console.CursorTop;
                 int tempPosX = Console.CursorLeft;
