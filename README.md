@@ -5,7 +5,7 @@ Therefore no more annoying blocking by `Console.ReadLine()` preventing text from
 
 ## Features
 
-SimultaneousConsoleIO tries to emulate console functionality from `Console.ReadLine()` as completely as possible and has some additional features such as printing text in the input are which the user can then edit.  
+SimultaneousConsoleIO tries to emulate console functionality from `Console.ReadLine()` as completely as possible and has some additional features such as printing text in the input area which the user can then edit.  
 Still, some features are missing as of now. See below for a full list of supported actions.
 
 <details><summary>Keys & Shortcuts</summary>
