@@ -347,6 +347,12 @@ namespace SimultaneousConsoleIO
 
             return cmdInput.ToString();
         }
+        
+        // allows printing all all queued output; useful before stopping program etc.
+        public void ForcePrintQueue()
+        {
+            Console.Write(outputWriter.GetText());
+        }
 
         // sets cursor position to end of user input (behind last character)
         private void SetCursorEndOfInput(int cursorYInit, int cursorXOffset, int cursorXTotal)
