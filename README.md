@@ -73,7 +73,13 @@ The SimulConsoleIO class handles most of the logic and emulates normal console b
 
 The class has the two most important methods:
 - `WriteLine`: used to replace `Console.WriteLine()`, allowing text to be written to the console while the ReadLine method is active.
-- `ReadLine`: used to replace `Console.ReadLine()`, reading user input while still allowing the console to print output with the WriteLine method. The inputText parameter can be used to write text in the input are, which the user can then edit or complete.
+- `ReadLine`: used to replace `Console.ReadLine()`, reading user input while still allowing the console to print output with the WriteLine method.  
+  The prompt parameter allows adding a prompt text before of the user input area.  
+  The inputText parameter can be used to write text in the input are, which the user can then edit or complete.  
+
+Further methods:
+- `Write`: used to replace `Console.Write()`, otherwise works like WriteLine above.
+- `ForcePrintQueue`: prints all buffered output text to the console. Usually not needed, because SimulConsoleIO does that periodically, but useful before stopping the program etc., because otherwise not yet printed text might be lost.
 
 **Important**: do not use `Console.WriteLine()` or `Console.ReadLine()` while using SimulConsoleIO. Doing so might break the console.
 
