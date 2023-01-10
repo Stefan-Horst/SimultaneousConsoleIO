@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Text;
 using SimultaneousConsoleIO;
 
 namespace Example
@@ -24,12 +25,12 @@ namespace Example
 
         public string GetText()
         {
-            string s = "";
+            StringBuilder s = new StringBuilder();
             
             while (outputTextQueue.Count > 0)
-                s += outputTextQueue.Dequeue();
+                s.Append(outputTextQueue.Dequeue());
 
-            return s;
+            return s.ToString();
         }
     }
 }
