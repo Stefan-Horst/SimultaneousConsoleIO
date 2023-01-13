@@ -133,7 +133,6 @@ namespace SimultaneousConsoleIO
                             Console.CursorTop--;
                             Console.CursorLeft = Console.BufferWidth - 1;
                             Console.Write(" \b");
-                            Console.CursorLeft++;
                         }
                         else if (cursorXTotal != 0)
                         {
@@ -274,14 +273,12 @@ namespace SimultaneousConsoleIO
                 
                 case ConsoleKey.End: //ende key
                     cursorXTotal = cmdInput.Length;
-
                     SetCursorEndOfInput();
                     break;
                 
                 case ConsoleKey.Home: //pos1 key
                     Console.CursorTop = cursorYInit;
                     Console.CursorLeft = cursorXOffset;
-
                     cursorXTotal = 0;
                     break;
                 
@@ -290,15 +287,7 @@ namespace SimultaneousConsoleIO
                     return; // if not at end of input
                 case ConsoleKey.Delete: //entf key
                     cmdInput.Remove(cursorXTotal, 1);
-
-                    if (Console.CursorLeft == Console.BufferWidth - 1) // if cursor x at end of line
-                    {
-                        Console.Write(cmdInput.ToString(cursorXTotal, cmdInput.Length - cursorXTotal) + " \b");
-                    }
-                    else
-                    {
-                        Console.Write(" \b" + cmdInput.ToString(cursorXTotal, cmdInput.Length - cursorXTotal) + " \b");
-                    }
+                    Console.Write(cmdInput.ToString(cursorXTotal, cmdInput.Length - cursorXTotal) + " \b");
                     SetCursorEndOfInput();
                     break;
                 
@@ -330,12 +319,6 @@ namespace SimultaneousConsoleIO
                     if (cursorXTotal >= cmdInput.Length) // if cursor is at end of input
                     {
                         cmdInput.Append(cki.KeyChar);
-
-                        if ((cursorXOffset + cursorXTotal) % Console.BufferWidth == Console.BufferWidth - 1) // if cursor x at end of line
-                        {
-                            Console.CursorTop++;
-                            Console.CursorLeft = 0;
-                        }
                     }
                     else
                     {
@@ -345,14 +328,14 @@ namespace SimultaneousConsoleIO
 
                         Console.Write(cmdInput.ToString(cursorXTotal + 1, cmdInput.Length - cursorXTotal - 1)); // move text after insertion one to the right
 
+                        Console.CursorTop = tempPosY;
+
                         if ((cursorXOffset + cursorXTotal) % Console.BufferWidth == Console.BufferWidth - 1) // if cursor x at end of line
                         {
-                            Console.CursorTop = tempPosY + 1;
                             Console.CursorLeft = 0;
                         }
                         else
                         {
-                            Console.CursorTop = tempPosY;
                             Console.CursorLeft = (cursorXOffset + cursorXTotal) % Console.BufferWidth + 1;
                         }
                     }
@@ -388,23 +371,15 @@ namespace SimultaneousConsoleIO
             if (output.Length == 0) return;
 
             string inputCache = cmdInput.ToString();
-            
-            // set to cursor y pos last line of input
-            int tempPosY = cursorYInit + (cursorXOffset + inputCache.Length) / Console.BufferWidth;
-            if ((cursorXOffset + inputCache.Length) % Console.BufferWidth > 0)
-                tempPosY++;
 
             Console.CursorTop = cursorYInit;
             Console.CursorLeft = 0;
-            for (int i = cursorYInit; i <= tempPosY; i++) // clear current user input
-            {
-                Console.WriteLine(new string(' ', Console.BufferWidth));
-            }
+            Console.WriteLine(new string(' ', cursorXOffset + inputCache.Length)); // clear current user input
             Console.CursorTop = cursorYInit;
 
             Console.Write(output);
 
-            tempPosY = Console.CursorTop;
+            int tempPosY = Console.CursorTop;
             int tempPosX = Console.CursorLeft;
 
             Console.Write(prompt + inputCache);
